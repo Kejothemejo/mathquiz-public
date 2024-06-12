@@ -1,0 +1,99 @@
+import time
+import random
+
+# function to generate a random math question
+def generate_question():
+    operations = ['+', '-', '*', '/']  # list of the possible operations that you may get
+    num1 = random.randint(1, 10)  # generate a random integer between 1 and 10
+    num2 = random.randint(1, 10)  # generate another random integer between 1 and 10
+    operation = random.choice(operations)  # randomly choosing an operation
+
+
+    # calculate the answer based on the chosen operation
+    if operation == '+':
+        answer = num1 + num2
+    elif operation == '-':
+        answer = num1 - num2
+    elif operation == '*':
+        answer = num1 * num2
+    elif operation == '/':
+        num1 = num1 * num2  # ensuring the division results in an integer
+        answer = num1 // num2
+
+    question = f"What is {num1} {operation} {num2}?"  # Format the question
+    return question, answer  # return the question and answer
+
+# function to conduct the math quiz
+def math_quiz(num_questions):
+    correct_answers = 0  # counting the amount of correct answers
+    history = []  # list to store the quiz history
+
+
+    # looping through the number of questions
+
+    for _ in range(num_questions):
+        question, answer = generate_question()  # generate a new question
+        print(question)  # Print the question
+        user_answer = input("Your answer: ")  # get the user's answer
+
+        try:
+            user_answer = int(user_answer)  # trying to convert the answer to an integer
+            if user_answer == answer:  # checking if the answer is correct
+                print("Correct!")
+                correct_answers += 1  # correct answers counter
+                history.append((question, user_answer, True))  # adding to history
+            else:
+                print(f"Wrong. The correct answer is {answer}.")
+                history.append((question, user_answer, False))  # adding to history
+        except ValueError:
+            print(f"Invalid input. The correct answer is {answer}.")
+            history.append((question, user_answer, False))  # add to history
+
+    # printing quiz summary
+    print(f"\nQuiz completed! You got {correct_answers} out of {num_questions} correct.")
+    print(f"That's {(correct_answers / num_questions) * 100:.2f}% correct.\n")
+
+
+    # ask if the user wants to see the quiz history
+    show_history = input("Would you like to see your quiz history? (yes/no) ")
+    if show_history == "yes":
+        print("\nQuiz History:")
+        for q, user_ans, correct in history:
+            feedback = "Correct" if correct else "Incorrect"
+            print(f"Question: {q}, Your Answer: {user_ans}, {feedback}")
+
+
+
+# main function to run the quiz program
+def main():
+    name = input('Hi, what is your name? ')  # Get the users name
+
+    # main loop to start the quiz
+    while True:
+        response = input(f'{name}, would you like to play a basic math quiz? (yes/no) ')
+        if response == "no":  # if user doesn't want to play
+            print('Okay, maybe next time :(')
+            return  # exit the program
+        elif response == "yes":  # If user wants to play
+            while True:
+                num_questions = input("How many questions would you like? (Enter (infinite) for endless mode) ")
+                if num_questions == 'infinite':  # if user chooses infinite mode
+                    while True:
+                        math_quiz(1)  # asking one question at a time
+                        cont = input("Continue playing? (yes/no) ")
+                        if cont == 'no':  # if user wants to stop
+                            return  # exit the program
+                else:
+                    try:
+                        num_questions = int(num_questions)  # try to convert input to an integer
+                        math_quiz(num_questions)  # start the quiz with the specified number of questions
+                        break  # exit the inner loop
+                    except ValueError:  # handling invalid inputs
+                        print("Please give me a anwser.")
+            break  # exit the outer loop
+        else:
+            print("Please answer with 'yes' or 'no'.")  # handle invalid input
+
+
+if __name__ == "__main__":
+    main()  # this runs the main function
